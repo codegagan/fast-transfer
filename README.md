@@ -2,6 +2,7 @@
 Client server file transfer program to utilize network efficiently by tranferring the file in parallel.
 
 ## Design
+- Multithreaded server for quick connection handling.
 - Uses default TCP protocol for reliable delivery.
 - defines/implements custom application control protocol over TCP for client/server communication.
 - Uses flexible 1024 bytes control structure (to support features in future).
