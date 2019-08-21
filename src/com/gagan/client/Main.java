@@ -1,5 +1,6 @@
 package com.gagan.client;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.net.Socket;
@@ -17,7 +18,6 @@ public class Main {
 	public static void main(String[] args) throws Exception, IOException {
 
 		ExecutorService fixedThreadPool = Executors.newFixedThreadPool(10);
-		// TODO Auto-generated method stub
 
 		String filePath = "C:\\wsgagan\\temp\\fast-transfer-client\\download.zip";
 
@@ -45,13 +45,9 @@ public class Main {
 
 		System.out.println("file length " + length);
 
-//		socket.close();
-
 		RandomAccessFile memoryMappedFile = new RandomAccessFile(filePath, "rw");
 
-		// Mapping a file into memory
 		MappedByteBuffer out = memoryMappedFile.getChannel().map(FileChannel.MapMode.READ_WRITE, 0, length);
-		// open fixed 5 connections
 
 		long rem = length % 5;
 		long eachPart = (length - rem) / 5;
@@ -68,17 +64,18 @@ public class Main {
 				socket1.getOutputStream().write(write1);
 				socket1.getOutputStream().flush();
 				System.out.println("reading part 1");
+				BufferedInputStream bufferedInputStream = new BufferedInputStream(socket1.getInputStream());
 				long i;
 				for (i = 0; i < eachPart; i++) {
 					out.put((byte) socket1.getInputStream().read());
+					out.put((byte) bufferedInputStream.read());
 				}
 				System.out.println("finished reading 1");
+				bufferedInputStream.close();
 				socket1.close();
 			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -96,17 +93,17 @@ public class Main {
 						socket1.getOutputStream().write(write1);
 						socket1.getOutputStream().flush();
 						System.out.println("reading part 2");
+						BufferedInputStream bufferedInputStream = new BufferedInputStream(socket1.getInputStream());
 						long i;
 						for (i = 0; i < eachPart; i++) {
-							out.put((int) (eachPart + i), (byte) socket1.getInputStream().read());
+							out.put((int) (eachPart + i), (byte) bufferedInputStream.read());
 						}
 						System.out.println("finished reading 2");
+						bufferedInputStream.close();
 						socket1.close();
 					} catch (UnknownHostException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 
@@ -124,17 +121,17 @@ public class Main {
 						socket1.getOutputStream().write(write1);
 						socket1.getOutputStream().flush();
 						System.out.println("reading part 3");
+						BufferedInputStream bufferedInputStream = new BufferedInputStream(socket1.getInputStream());
 						long i;
 						for (i = 0; i < eachPart; i++) {
-							out.put((int) (eachPart + eachPart + i), (byte) socket1.getInputStream().read());
+							out.put((int) (eachPart + eachPart + i), (byte) bufferedInputStream.read());
 						}
 						System.out.println("finished reading 3");
+						bufferedInputStream.close();
 						socket1.close();
 					} catch (UnknownHostException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 
@@ -152,16 +149,17 @@ public class Main {
 						socket1.getOutputStream().write(write1);
 						socket1.getOutputStream().flush();
 						System.out.println("reading part 4");
+						BufferedInputStream bufferedInputStream = new BufferedInputStream(socket1.getInputStream());
+
 						for (long i = 0; i < eachPart; i++) {
-							out.put((int) (eachPart + eachPart + eachPart + i), (byte) socket1.getInputStream().read());
+							out.put((int) (eachPart + eachPart + eachPart + i), (byte) bufferedInputStream.read());
 						}
 						System.out.println("finished reading 4");
+						bufferedInputStream.close();
 						socket1.close();
 					} catch (UnknownHostException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 
@@ -179,18 +177,19 @@ public class Main {
 						socket1.getOutputStream().write(write1);
 						socket1.getOutputStream().flush();
 						System.out.println("reading part 5");
+						BufferedInputStream bufferedInputStream = new BufferedInputStream(socket1.getInputStream());
+
 						long i;
 						for (i = 0; i < eachPart + rem; i++) {
 							out.put((int) (eachPart + eachPart + eachPart + eachPart + i),
-									(byte) socket1.getInputStream().read());
+									(byte) bufferedInputStream.read());
 						}
 						System.out.println("finished reading 5");
+						bufferedInputStream.close();
 						socket1.close();
 					} catch (UnknownHostException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 
@@ -204,7 +203,6 @@ public class Main {
 				memoryMappedFile.close();
 				System.out.println("Download completed");
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		});

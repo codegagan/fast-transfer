@@ -1,5 +1,6 @@
 package com.gagan.server;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -27,10 +28,8 @@ public class Main {
 			file = new RandomAccessFile(filePath, "r");
 			mappedByteBuffer = file.getChannel().map(FileChannel.MapMode.READ_ONLY, 0, length);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -76,45 +75,51 @@ public class Main {
 				byte clientId = read[1];
 				byte filePart = read[2];
 				System.out.println("existing client for filepart" + filePart);
+				BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(socket.getOutputStream());
 				switch (filePart) {
 				case 1: {
 					for (int i = 0; i < eachPart; i++) {
-						socket.getOutputStream().write(mappedByteBuffer.get(i));
+						bufferedOutputStream.write(mappedByteBuffer.get(i));
+
 					}
-					socket.getOutputStream().flush();
+					bufferedOutputStream.flush();
+					bufferedOutputStream.close();
 					socket.close();
 					break;
 				}
 				case 2: {
 					for (int i = 0; i < eachPart; i++) {
-						socket.getOutputStream().write(mappedByteBuffer.get(eachPart + i));
+						bufferedOutputStream.write(mappedByteBuffer.get(eachPart + i));
 					}
-					socket.getOutputStream().flush();
+					bufferedOutputStream.flush();
+					bufferedOutputStream.close();
 					socket.close();
 					break;
 				}
 				case 3: {
 					for (int i = 0; i < eachPart; i++) {
-						socket.getOutputStream().write(mappedByteBuffer.get(eachPart + eachPart + i));
+						bufferedOutputStream.write(mappedByteBuffer.get(eachPart + eachPart + i));
 					}
-					socket.getOutputStream().flush();
+					bufferedOutputStream.flush();
+					bufferedOutputStream.close();
 					socket.close();
 					break;
 				}
 				case 4: {
 					for (int i = 0; i < eachPart; i++) {
-						socket.getOutputStream().write(mappedByteBuffer.get(eachPart + eachPart + eachPart + i));
+						bufferedOutputStream.write(mappedByteBuffer.get(eachPart + eachPart + eachPart + i));
 					}
-					socket.getOutputStream().flush();
+					bufferedOutputStream.flush();
+					bufferedOutputStream.close();
 					socket.close();
 					break;
 				}
 				case 5: {
 					for (int i = 0; i < eachPart + rem; i++) {
-						socket.getOutputStream()
-								.write(mappedByteBuffer.get(eachPart + eachPart + eachPart + eachPart + i));
+						bufferedOutputStream.write(mappedByteBuffer.get(eachPart + eachPart + eachPart + eachPart + i));
 					}
-					socket.getOutputStream().flush();
+					bufferedOutputStream.flush();
+					bufferedOutputStream.close();
 					socket.close();
 					break;
 				}
@@ -131,16 +136,7 @@ public class Main {
 				throw new RuntimeException("Invalid control value");
 			}
 
-//			SocketChannel channel = socket.getChannel();
-//			channel.write(ByteBuffer.wrap("hello from server".getBytes()));
-//			ByteBuffer readBuffer = ByteBuffer.allocate(5);
-//
-//			channel.read(readBuffer);
-//			readBuffer.flip();
-//			String string = new String(readBuffer.array());
-//			System.out.println(string);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
