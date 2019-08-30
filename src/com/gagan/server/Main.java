@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Main {
 
-	static String filePath = "C:\\wsgagan\\temp\\ddem-atos.war";
+	static String filePath = "C:\\wsgagan\\temp\\upload.zip";
 	static long length = new File(filePath).length();
 	static RandomAccessFile file;
 	static MappedByteBuffer mappedByteBuffer;

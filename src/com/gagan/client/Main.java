@@ -67,7 +67,6 @@ public class Main {
 				BufferedInputStream bufferedInputStream = new BufferedInputStream(socket1.getInputStream());
 				long i;
 				for (i = 0; i < eachPart; i++) {
-					out.put((byte) socket1.getInputStream().read());
 					out.put((byte) bufferedInputStream.read());
 				}
 				System.out.println("finished reading 1");
